@@ -1,23 +1,52 @@
 'use client';
-import { Files, Search, GitBranch, Blocks, Package, Settings, ChevronDown, ChevronRight } from 'lucide-react';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { ChevronDown, ChevronRight, type LucideIcon } from 'lucide-react';
 import { useState } from 'react';
+import {
+  ACTIVITY_BAR,
+  EXPLORER_SECTIONS,
+  type ExplorerItem,
+} from '@/lib/nav';
 
 export default function Sidebar() {
-  const [contentOpen, setContentOpen] = useState(true);
-  const [web3Open, setWeb3Open] = useState(true);
-  const [usersOpen, setUsersOpen] = useState(false);
+  const pathname = usePathname();
+
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>(
+    () =>
+      EXPLORER_SECTIONS.reduce<Record<string, boolean>>((acc, s) => {
+        acc[s.id] = s.defaultOpen;
+        return acc;
+      }, {}),
+  );
+
+  const toggle = (id: string) =>
+    setOpenSections(prev => ({ ...prev, [id]: !prev[id] }));
 
   return (
     <div className="flex h-full shrink-0">
-      {/* VS Code Activity Bar */}
+      {/* Activity Bar */}
       <div className="w-12 bg-[#333333] flex flex-col items-center border-r border-[#252526]">
-        <ActivityIcon icon={<Files size={24} />} active />
-        <ActivityIcon icon={<Search size={24} />} />
-        <ActivityIcon icon={<GitBranch size={24} />} />
-        <ActivityIcon icon={<Blocks size={24} />} />
+        {ACTIVITY_BAR.filter(a => a.position === 'top').map(item => (
+          <ActivityIcon
+            key={item.id}
+            icon={item.icon}
+            href={item.href}
+            label={item.label}
+            active={isActive(pathname, item.href)}
+          />
+        ))}
         <div className="flex-1" />
-        <ActivityIcon icon={<Package size={24} />} />
-        <ActivityIcon icon={<Settings size={24} />} />
+        {ACTIVITY_BAR.filter(a => a.position === 'bottom').map(item => (
+          <ActivityIcon
+            key={item.id}
+            icon={item.icon}
+            href={item.href}
+            label={item.label}
+            active={isActive(pathname, item.href)}
+          />
+        ))}
       </div>
 
       {/* Explorer Panel */}
@@ -27,66 +56,104 @@ export default function Sidebar() {
         </div>
 
         <div className="flex-1 overflow-y-auto text-[13px]">
-          <SectionHeader label="Content" open={contentOpen} onToggle={() => setContentOpen(v => !v)} />
-          {contentOpen && (
-            <>
-              <FileItem label="posts" count="1,284" color="text-[#ce9178]" />
-              <FileItem label="pages" count="42" color="text-[#ce9178]" />
-              <FileItem label="drafts" count="18" color="text-[#858585]" />
-            </>
-          )}
-
-          <SectionHeader label="Web3" open={web3Open} onToggle={() => setWeb3Open(v => !v)} />
-          {web3Open && (
-            <>
-              <FileItem label="nft-collections" count="3" color="text-[#4ec9b0]" />
-              <FileItem label="smart-contracts" count="3" color="text-[#4ec9b0]" />
-              <FileItem label="token-holders" count="8.4k" color="text-[#4ec9b0]" />
-            </>
-          )}
-
-          <SectionHeader label="Users" open={usersOpen} onToggle={() => setUsersOpen(v => !v)} />
-          {usersOpen && (
-            <>
-              <FileItem label="admin" count="4" color="text-[#dcdcaa]" />
-              <FileItem label="editors" count="12" color="text-[#dcdcaa]" />
-            </>
-          )}
+          {EXPLORER_SECTIONS.map(section => (
+            <div key={section.id}>
+              <SectionHeader
+                label={section.label}
+                open={openSections[section.id]}
+                onToggle={() => toggle(section.id)}
+              />
+              {openSections[section.id] &&
+                section.items.map(item => (
+                  <FileItem
+                    key={item.href}
+                    item={item}
+                    active={pathname === item.href}
+                  />
+                ))}
+            </div>
+          ))}
         </div>
       </aside>
     </div>
   );
 }
 
-function ActivityIcon({ icon, active }: { icon: React.ReactNode; active?: boolean }) {
+/** "/" only matches exactly. Sub-routes match by prefix. */
+function isActive(pathname: string, href: string): boolean {
+  if (href === '/') return pathname === '/';
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+function ActivityIcon({
+  icon: Icon,
+  href,
+  label,
+  active,
+}: {
+  icon: LucideIcon;
+  href: string;
+  label: string;
+  active?: boolean;
+}) {
   return (
-    <button className={`w-12 h-12 flex items-center justify-center transition-colors border-l-2 ${
-      active
-        ? 'text-white border-white bg-[#37373d]'
-        : 'text-[#858585] hover:text-[#cccccc] border-transparent'
-    }`}>
-      {icon}
-    </button>
+    <Link
+      href={href}
+      title={label}
+      aria-label={label}
+      className={`w-12 h-12 flex items-center justify-center transition-colors border-l-2 ${
+        active
+          ? 'text-white border-white bg-[#37373d]'
+          : 'text-[#858585] hover:text-[#cccccc] border-transparent'
+      }`}
+    >
+      <Icon size={24} />
+    </Link>
   );
 }
 
-function SectionHeader({ label, open, onToggle }: { label: string; open: boolean; onToggle: () => void }) {
+function SectionHeader({
+  label,
+  open,
+  onToggle,
+}: {
+  label: string;
+  open: boolean;
+  onToggle: () => void;
+}) {
   return (
     <button
       onClick={onToggle}
       className="w-full flex items-center gap-1 px-2 py-1.5 text-[11px] font-bold uppercase tracking-wider text-[#bbbbbb] hover:bg-[#2a2d2e] select-none"
     >
-      {open ? <ChevronDown size={12} className="shrink-0" /> : <ChevronRight size={12} className="shrink-0" />}
+      {open ? (
+        <ChevronDown size={12} className="shrink-0" />
+      ) : (
+        <ChevronRight size={12} className="shrink-0" />
+      )}
       {label}
     </button>
   );
 }
 
-function FileItem({ label, count, color }: { label: string; count: string; color: string }) {
+function FileItem({
+  item,
+  active,
+}: {
+  item: ExplorerItem;
+  active: boolean;
+}) {
   return (
-    <div className="flex items-center justify-between pl-7 pr-3 py-0.5 hover:bg-[#37373d] cursor-pointer text-[#cccccc] hover:text-white">
-      <span className="text-[12px] truncate">{label}</span>
-      <span className={`text-[10px] font-mono shrink-0 ml-2 ${color}`}>({count})</span>
-    </div>
+    <Link
+      href={item.href}
+      className={`flex items-center justify-between pl-7 pr-3 py-0.5 cursor-pointer hover:bg-[#37373d] hover:text-white ${
+        active ? 'bg-[#37373d] text-white' : 'text-[#cccccc]'
+      }`}
+    >
+      <span className="text-[12px] truncate">{item.label}</span>
+      <span className={`text-[10px] font-mono shrink-0 ml-2 ${item.color}`}>
+        ({item.count})
+      </span>
+    </Link>
   );
 }
