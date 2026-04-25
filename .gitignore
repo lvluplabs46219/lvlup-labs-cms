@@ -1,0 +1,26 @@
+﻿# dependencies
+node_modules/
+
+# next.js
+.next/
+out/
+build/
+
+# env files
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# logs
+*.log
+
+# build artifacts
+*.tsbuildinfo
+dist/
+
+# system/editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

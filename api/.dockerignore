@@ -1,0 +1,15 @@
+node_modules/
+.git/
+log/
+tmp/
+.env
+.env.local
+coverage/
+.DS_Store
+*.swp
+*.swo
+.vscode/
+.idea/
+*.log
+db/*.sqlite3
+db/*.sqlite3-*

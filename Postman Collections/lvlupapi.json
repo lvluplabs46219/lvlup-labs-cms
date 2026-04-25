@@ -1,0 +1,213 @@
+{
+  "info": {
+    "_postman_id": "ffb23506-6dc5-48d3-a465-28a1e31ad657",
+    "name": "LvlUp Labs API — v1",
+    "description": "Rails API for Bear Creek (equine) and PerformAir (aviation MRO) domains.\n\nBase URL: {{base_url}}\nAuth: Bearer {{firebase_token}}  (not required for POST /rfqs)\n\nEnvironment variables:\n  base_url        = http://localhost:4000\n  firebase_token  = <Firebase ID token from client>\n  org_slug        = bear-creek  (or performair)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url",       "value": "http://localhost:4000" },
+    { "key": "firebase_token", "value": "" },
+    { "key": "org_slug",       "value": "bear-creek" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "GET /api/v1/health",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/health",
+            "description": "Returns {status: ok}. No auth required. Use to confirm the server is up."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"ok\", () => pm.expect(pm.response.json().status).to.eql(\"ok\"));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bear Creek — Horses",
+      "item": [
+        {
+          "name": "GET /api/v1/horses",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization",      "value": "Bearer {{firebase_token}}" },
+              { "key": "X-Organization-Slug","value": "{{org_slug}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/horses",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "horses"],
+              "query": [
+                { "key": "status", "value": "for_sale", "disabled": true,
+                  "description": "active | for_sale | reserved | sold | retired | deceased | archived" },
+                { "key": "sex",    "value": "mare",     "disabled": true,
+                  "description": "mare | stallion | gelding | filly | colt" },
+                { "key": "breed",  "value": "Arabian",  "disabled": true }
+              ]
+            },
+            "description": "List horses for an org. Filter by status, sex, breed."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Has data array\", () => pm.expect(pm.response.json()).to.have.property(\"data\"));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /api/v1/horses/:slug",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization",      "value": "Bearer {{firebase_token}}" },
+              { "key": "X-Organization-Slug","value": "{{org_slug}}" }
+            ],
+            "url": "{{base_url}}/api/v1/horses/thunder-ridge",
+            "description": "Single horse by slug. Includes pedigree + documents."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200 or 404\", () => pm.expect([200,404]).to.include(pm.response.code));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "PerformAir — Parts",
+      "item": [
+        {
+          "name": "GET /api/v1/parts",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization",      "value": "Bearer {{firebase_token}}" },
+              { "key": "X-Organization-Slug","value": "performair" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/parts",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "parts"],
+              "query": [
+                { "key": "q",             "value": "65C",   "disabled": true,
+                  "description": "Search part number or nomenclature (case-insensitive)" },
+                { "key": "ata_chapter",   "value": "25",    "disabled": true },
+                { "key": "easa",          "value": "true",  "disabled": true },
+                { "key": "caac",          "value": "true",  "disabled": true },
+                { "key": "der_available", "value": "true",  "disabled": true }
+              ]
+            },
+            "description": "Search the parts catalog. Use ?q= for part number / nomenclature search."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Has data array\", () => pm.expect(pm.response.json()).to.have.property(\"data\"));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /api/v1/parts/:id",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization",      "value": "Bearer {{firebase_token}}" },
+              { "key": "X-Organization-Slug","value": "performair" }
+            ],
+            "url": "{{base_url}}/api/v1/parts/{{part_id}}",
+            "description": "Single part by UUID. Response includes available inventory_items."
+          }
+        }
+      ]
+    },
+    {
+      "name": "PerformAir — RFQs",
+      "item": [
+        {
+          "name": "POST /api/v1/rfqs  (public — no auth)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type",       "value": "application/json" },
+              { "key": "X-Organization-Slug","value": "performair" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rfq\": {\n    \"company_name\": \"Acme Airlines\",\n    \"contact_name\": \"Jane Smith\",\n    \"email\": \"jane@acmeair.com\",\n    \"phone\": \"+1-555-0100\",\n    \"message\": \"Need ASAP, aircraft on ground.\",\n    \"is_aog\": true,\n    \"source\": \"website\",\n    \"line_items_attributes\": [\n      {\n        \"part_number\": \"65C20421-100\",\n        \"quantity\": 2,\n        \"condition_requested\": \"SV\",\n        \"notes\": \"Need FAA 8130\"\n      }\n    ]\n  }\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{base_url}}/api/v1/rfqs",
+            "description": "Submit an RFQ. No Firebase token required — this is the public-facing form endpoint."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "if (pm.response.code === 201) {",
+                  "  pm.collectionVariables.set(\"rfq_id\", pm.response.json().data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /api/v1/rfqs  (staff — auth required)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization",      "value": "Bearer {{firebase_token}}" },
+              { "key": "X-Organization-Slug","value": "performair" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/rfqs",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "rfqs"],
+              "query": [
+                { "key": "status", "value": "new",  "disabled": true,
+                  "description": "new | in_review | quoted | won | lost | cancelled" },
+                { "key": "aog",    "value": "true", "disabled": true }
+              ]
+            },
+            "description": "List RFQs for staff. Requires Firebase Bearer token."
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "CMS Dashboard"
+version = "1.0.0"
+id = "artifacts/cms-dashboard"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23150
+
+[services.development]
+run = "pnpm --filter @workspace/cms-dashboard run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/cms-dashboard", "run", "build" ]
+publicDir = "artifacts/cms-dashboard/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23150"
+BASE_PATH = "/"

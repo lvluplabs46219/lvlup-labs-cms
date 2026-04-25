@@ -1,0 +1,26 @@
+# Standard Rails .gitignore patterns
+/.bundle
+/db/*.sqlite3
+/db/*.sqlite3-journal
+/db/*.sqlite3-test
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+/storage/*
+!/storage/.keep
+/public/assets
+.byebug_history
+
+# IDE files
+/.idea
+/.vscode
+
+# Bootsnap cache
+/tmp/cache/bootsnap*
+
+# Environment files
+.env
+.env.local
+.env.test
+.env.production

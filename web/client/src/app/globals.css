@@ -1,0 +1,229 @@
+﻿@import "tailwindcss";
+
+/* ─────────────────────────────────────────
+   Design Tokens
+   ───────────────────────────────────────── */
+:root {
+  /* Backgrounds */
+  --bg-base:      #08080f;
+  --bg-surface:   rgba(255, 255, 255, 0.04);
+  --bg-elevated:  rgba(255, 255, 255, 0.07);
+  --bg-overlay:   rgba(255, 255, 255, 0.10);
+
+  /* Borders */
+  --border-dim:   rgba(255, 255, 255, 0.08);
+  --border-soft:  rgba(255, 255, 255, 0.14);
+  --border-glow:  rgba(0, 212, 255, 0.35);
+
+  /* Accent — cyan primary */
+  --accent:       #00d4ff;
+  --accent-dim:   rgba(0, 212, 255, 0.15);
+  --accent-glow:  0 0 24px rgba(0, 212, 255, 0.45);
+
+  /* Accent — lime secondary (PerformAir) */
+  --accent-lime:      #a3ff47;
+  --accent-lime-dim:  rgba(163, 255, 71, 0.12);
+
+  /* Accent — purple tertiary (NFT/Web3) */
+  --accent-purple:     #9b5dff;
+  --accent-purple-dim: rgba(155, 93, 255, 0.15);
+
+  /* Text */
+  --text-primary:   rgba(255, 255, 255, 0.92);
+  --text-secondary: rgba(255, 255, 255, 0.55);
+  --text-muted:     rgba(255, 255, 255, 0.30);
+
+  /* Radius */
+  --radius-sm:  10px;
+  --radius-md:  16px;
+  --radius-lg:  24px;
+  --radius-xl:  32px;
+
+  /* Blur */
+  --blur-glass: blur(16px) saturate(180%);
+}
+
+/* ─────────────────────────────────────────
+   Base Reset
+   ───────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg-base);
+  min-height: 100dvh;
+}
+
+/* Ambient gradient mesh behind content */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(0, 212, 255, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(155, 93, 255, 0.08) 0%, transparent 60%);
+  z-index: 0;
+}
+
+/* ─────────────────────────────────────────
+   Glass Card Utility
+   ───────────────────────────────────────── */
+.glass {
+  background: var(--bg-surface);
+  backdrop-filter: var(--blur-glass);
+  -webkit-backdrop-filter: var(--blur-glass);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-md);
+}
+
+.glass-elevated {
+  background: var(--bg-elevated);
+  backdrop-filter: var(--blur-glass);
+  -webkit-backdrop-filter: var(--blur-glass);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+}
+
+/* Hover accent border */
+.glass-interactive {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.glass-interactive:hover {
+  border-color: var(--border-glow);
+  box-shadow: var(--accent-glow);
+}
+
+/* ─────────────────────────────────────────
+   Bento Grid
+   ───────────────────────────────────────── */
+.bento-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(12, 1fr);
+}
+
+/* Span helpers */
+.bento-col-4  { grid-column: span 4; }
+.bento-col-6  { grid-column: span 6; }
+.bento-col-8  { grid-column: span 8; }
+.bento-col-12 { grid-column: span 12; }
+
+@media (max-width: 768px) {
+  .bento-col-4,
+  .bento-col-6,
+  .bento-col-8,
+  .bento-col-12 { grid-column: span 12; }
+}
+
+/* ─────────────────────────────────────────
+   Neon Text + Borders
+   ───────────────────────────────────────── */
+.text-accent        { color: var(--accent); }
+.text-accent-lime   { color: var(--accent-lime); }
+.text-accent-purple { color: var(--accent-purple); }
+.text-secondary     { color: var(--text-secondary); }
+.text-muted         { color: var(--text-muted); }
+
+.border-accent        { border-color: var(--border-glow); }
+
+.glow-text-cyan {
+  text-shadow: 0 0 20px rgba(0, 212, 255, 0.7);
+}
+
+/* ─────────────────────────────────────────
+   Button Variants
+   ───────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--accent);
+  color: #08080f;
+  border: none;
+}
+.btn-primary:hover {
+  box-shadow: var(--accent-glow);
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 19px;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-soft);
+}
+.btn-ghost:hover {
+  background: var(--bg-elevated);
+  border-color: var(--border-glow);
+}
+
+/* ─────────────────────────────────────────
+   Stat / KPI Chip
+   ───────────────────────────────────────── */
+.stat-chip {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-dim);
+}
+.stat-chip__value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text-primary);
+}
+.stat-chip__label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ─────────────────────────────────────────
+   RainbowKit theme override — align to our palette
+   ───────────────────────────────────────── */
+[data-rk] {
+  --rk-colors-accentColor:            var(--accent) !important;
+  --rk-colors-accentColorForeground:  #08080f !important;
+  --rk-colors-modalBackground:        #0f0f1a !important;
+  --rk-colors-modalBorder:            var(--border-soft) !important;
+  --rk-radii-modal:                   var(--radius-lg) !important;
+  --rk-radii-actionButton:            var(--radius-sm) !important;
+  --rk-radii-connectButton:           var(--radius-sm) !important;
+}
+
+/* ─────────────────────────────────────────
+   Scrollbar
+   ───────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--border-soft);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--accent-dim); }
