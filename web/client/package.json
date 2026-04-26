@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "description": "LvlUp Labs — public-facing Web3 client for Bear Creek Equine and PerformAir MRO",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
