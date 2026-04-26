@@ -2,7 +2,7 @@
   "name": "@lvlup/admin",
   "version": "0.1.0",
   "private": true,
-  "description": "LvlUp Labs CMS — internal staff dashboard (Next.js 15, Drizzle, Firebase, Web3)",
+  "description": "LvlUp Labs CMS — internal staff dashboard (Next.js 15, , Firebase, Web3)",
   "engines": {
     "node": ">=20"
   },

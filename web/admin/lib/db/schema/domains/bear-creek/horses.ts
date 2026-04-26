@@ -28,7 +28,7 @@ import {
   text,
   timestamp,
   uuid,
-} from 'drizzle-orm/pg-core';
+} from '-orm/pg-core';
 
 import { assets, documents, organizations } from '../../core';
 

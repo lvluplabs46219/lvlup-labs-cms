@@ -1,6 +1,6 @@
 import { db } from './db';
 import { inventoryItems, pedigrees, healthRecords } from './schema';
-import { eq, sql } from 'drizzle-orm';
+import { eq, sql } from '-orm';
 
 /**
  * Service for managing Digital Pedigrees and Web3 integrations
@@ -41,7 +41,7 @@ export const PedigreeService = {
     // In real app, this waits for blockchain tx
     console.log(`Transferring stallion token ${tokenId} to org ${newOwnerOrgId}...`);
     
-    // Update Drizzle DB to reflect the new "Chain of Custody"
+    // Update  DB to reflect the new "Chain of Custody"
     // Note: We use jsonb_insert or similar if we had a dedicated history field, 
     // for now we just move organizationId
     await db.update(inventoryItems)

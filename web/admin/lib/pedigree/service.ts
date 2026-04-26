@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { eq } from '-orm';
 
 import { db } from '@/lib/db';
 import { pinDocumentReference, pinJson } from '@/lib/ipfs';

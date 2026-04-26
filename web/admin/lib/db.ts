@@ -1,4 +1,4 @@
-import { drizzle } from 'drizzle-orm/node-postgres';
+import {  } from '-orm/node-postgres';
 import { Pool } from 'pg';
 import * as schema from './schema';
 
@@ -18,5 +18,5 @@ export const pool =
 if (process.env.NODE_ENV !== 'production') globalForPool.pool = pool;
 
 // Export the decoupled DB instance with schema
-export const db = drizzle(pool, { schema });
+export const db = (pool, { schema });
 

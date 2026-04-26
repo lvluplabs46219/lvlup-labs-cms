@@ -1,10 +1,10 @@
 # LvlUp Labs CMS
 
-LvlUp Labs CMS is a Rails-based CMS and directory starter for building farm, listing, and media-heavy content sites with an admin-first workflow. It uses Next.js, Drizzle ORM, PostgreSQL, and Tailwind to give you a modern CMS foundation with a clean back office.
+LvlUp Labs CMS is a Rails-based CMS and directory starter for building farm, listing, and media-heavy content sites with an admin-first workflow. It uses Next.js,  ORM, PostgreSQL, and Tailwind to give you a modern CMS foundation with a clean back office.
 
 ## What it includes
 
-- Next.js 15 app with PostgreSQL (via Drizzle).
+- Next.js 15 app with PostgreSQL (via ).
 - Custom Admin Dashboard for CRUD.
 - S3-Compatible Storage for images and uploads.
 - Rich text content support.
@@ -21,7 +21,7 @@ npm run dev
 
 - Next.js (App Router).
 - PostgreSQL.
-- Drizzle ORM.
+-  ORM.
 - Firebase Auth / Admin SDK.
 - S3-Compatible Storage.
 - Tailwind CSS.

@@ -25,7 +25,7 @@ import {
   text,
   timestamp,
   uuid,
-} from 'drizzle-orm/pg-core';
+} from '-orm/pg-core';
 
 import { contacts, documents, organizations } from '../../core';
 
@@ -56,7 +56,7 @@ export const inventoryStatusEnum = pgEnum('inventory_status', [
 
 /**
  * Airworthiness release document types.
- * Matches certTypeEnum in performair-nextjs Drizzle schema.
+ * Matches certTypeEnum in performair-nextjs  schema.
  */
 export const certTypeEnum = pgEnum('cert_type', [
   'FAA_8130',       // FAA Form 8130-3 Airworthiness Approval Tag
