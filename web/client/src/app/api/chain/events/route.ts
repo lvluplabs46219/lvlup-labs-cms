@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { chainService } from '@/lib/supabase-chain-service';
-import { ChainEventInput } from '@/lib/chain-of-command';
 
 // GET /api/chain/events - Get chain events
 export async function GET(request: NextRequest) {
