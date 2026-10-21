@@ -1,4 +1,4 @@
-﻿source "https://rubygems.org"
+source "https://rubygems.org"
 
 gem "rails", "~> 8.1.3"
 gem "pg", "~> 1.1"
@@ -9,7 +9,7 @@ gem "sidekiq", "~> 7.0"
 gem "redis", "~> 5.0"
 
 # Auth — Firebase JWT validation
-gem "jwt", "~> 2.9"
+gem "jwt", "~> 2.10"
 
 # CORS — allows Next.js frontend to call this API
 gem "rack-cors"
@@ -18,7 +18,7 @@ gem "rack-cors"
 gem "blueprinter"
 
 # HTTP client (for IPFS, external APIs)
-gem "faraday", "~> 2.0"
+gem "faraday", "~> 2.14"
 
 # Windows timezone data
 gem "tzinfo-data", platforms: %i[ windows jruby ]
